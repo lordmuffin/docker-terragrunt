@@ -52,8 +52,17 @@ RUN set -eux \
 FROM lordmuffin/alpine:3.9
 LABEL lordmuffin <dorkmeisterx69@gmail.com>
 
+ENV AZ 2.0.71
+
 RUN set -eux \
 	&& apk add --no-cache git
+
+RUN apk add -U python3 bash && \
+    apk add --virtual=build gcc python3-dev musl-dev libffi-dev openssl-dev make  && \
+    pip3 install --upgrade requests && \
+    pip3 install azure-cli==${AZ} && \
+    ln -s /usr/bin/python3 /usr/bin/python
+
 COPY --from=builder /usr/bin/terraform /usr/bin/terraform
 COPY --from=builder /usr/bin/terragrunt /usr/bin/terragrunt
 
